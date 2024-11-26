@@ -1,0 +1,34 @@
+<form [formGroup]="registroForm" (ngSubmit)="onSubmit()" class="form-register">
+  <mat-form-field class="form-field">
+    <mat-label>Titulo:</mat-label>
+    <input matInput formControlName="title" type="text" />
+  </mat-form-field>
+
+  <mat-form-field class="form-field">
+    <mat-label>Descripción:</mat-label>
+    <input matInput formControlName="description" type="email" />
+  </mat-form-field>
+
+  <div *ngIf="task">
+    <mat-label>Estado:</mat-label>
+    <mat-checkbox formControlName="completed" class="form-field">
+      <button
+        mat-button
+        [color]="registroForm.get('completed')?.value ? 'primary' : 'warn'"
+        type="button"
+      >
+        {{ registroForm.get("completed")?.value ? "Completado" : "Pendiente" }}
+      </button>
+    </mat-checkbox>
+  </div>
+
+  <button
+    color="primary"
+    mat-raised-button
+    type="submit"
+    [disabled]="!registroForm.valid"
+    class="submit-button"
+  >
+    {{ task ? "Actualizar" : "Registrar" }}
+  </button>
+</form>

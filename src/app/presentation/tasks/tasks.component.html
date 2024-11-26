@@ -1,0 +1,13 @@
+<div class="container">
+  <app-header
+    [showSignOut]="true"
+    title="Tareas"
+    (handlerDownloadTasks)="onHandlerDownloadTasks()"
+    (handlerSearchTasks)="onHandlerSearchTasks($event)"
+  ></app-header>
+  <app-body
+    [dataSource]="dataSource"
+    (handlerDeleteTask)="onHandlerDeleteTask($event)"
+    (handlerChangeStatus)="onHandlerChangeStatus($event)"
+  ></app-body>
+</div>

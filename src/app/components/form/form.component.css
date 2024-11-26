@@ -1,0 +1,19 @@
+.form-register {
+  max-width: 400px;
+  margin: 0 auto;
+  margin-top: 1.5em !important;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.submit-button {
+  width: 100%;
+  margin-top: 16px;
+}
