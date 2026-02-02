@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://us-central1-challenge-angular-2fbb2.cloudfunctions.net/api',
+  apiUrl: 'http://localhost:3000',
   firebase: {
     apiKey: 'AIzaSyCuRaxSsq0XN9IkEDHjczq9PwQTEVol5cE',
     authDomain: 'challenge-angular-2fbb2.firebaseapp.com',
