@@ -1,0 +1,39 @@
+<div class="container">
+  <app-header
+    [showSignOut]="true"
+    title="Tareas"
+    (handlerDownloadTasks)="onHandlerDownloadTasks()"
+    (handlerSearchTasks)="onHandlerSearchTasks($event)"
+  ></app-header>
+
+  @defer (on idle) {
+    @if (loadError()) {
+      <div class="tasks-error">
+        <mat-icon color="warn">error</mat-icon>
+        <p>{{ loadError() }}</p>
+        <button mat-raised-button color="primary" (click)="getClients()">
+          Reintentar
+        </button>
+      </div>
+    } @else {
+      <app-body
+        [dataSource]="filteredTasks()"
+        (handlerDeleteTask)="onHandlerDeleteTask($event)"
+        (handlerChangeStatus)="onHandlerChangeStatus($event)"
+      />
+    }
+  } @loading (minimum 200ms) {
+    <div class="tasks-loading">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando tareas...</p>
+    </div>
+  } @error {
+    <div class="tasks-error">
+      <mat-icon color="warn">error</mat-icon>
+      <p>Error al cargar el componente</p>
+      <button mat-raised-button color="primary" (click)="reloadPage()">
+        Reintentar
+      </button>
+    </div>
+  }
+</div>

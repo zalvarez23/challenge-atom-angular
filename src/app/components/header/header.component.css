@@ -1,0 +1,31 @@
+.container {
+  padding: 3rem;
+}
+
+.container__header {
+  .container__title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1em;
+    h1 {
+      font-size: 20px;
+      letter-spacing: 0.2em;
+    }
+  }
+
+  .container__subtitle {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+h1 {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+mat-form-field {
+  width: 100%;
+}

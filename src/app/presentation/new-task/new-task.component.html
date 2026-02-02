@@ -1,0 +1,11 @@
+<div class="container">
+  <app-header
+    [title]="isEdit ? 'Editar Tarea' : 'Nueva Tarea'"
+    [showButton]="false"
+    [showBack]="true"
+  ></app-header>
+  <app-form
+    (handlerNewTask)="onHandlerNewTask($event)"
+    [task]="task"
+  ></app-form>
+</div>

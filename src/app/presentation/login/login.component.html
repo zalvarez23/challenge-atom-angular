@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="container__title">Ingresar Email</div>
+
+  <form [formGroup]="emailForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill" class="container__email-input">
+      <mat-label>Correo Electrónico</mat-label>
+      <input
+        matInput
+        type="email"
+        formControlName="email"
+        placeholder="Email"
+      />
+      <mat-error *ngIf="emailForm.get('email')?.hasError('required')">
+        El correo es obligatorio.
+      </mat-error>
+      <mat-error *ngIf="emailForm.get('email')?.hasError('email')">
+        Ingresa un correo válido.
+      </mat-error>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      type="submit"
+      color="primary"
+      [disabled]="emailForm.invalid"
+    >
+      Enviar
+    </button>
+
+    <div *ngIf="loading()" class="container__loading">
+      <mat-spinner diameter="30"></mat-spinner>
+      <span> Cargando...</span>
+    </div>
+  </form>
+</div>

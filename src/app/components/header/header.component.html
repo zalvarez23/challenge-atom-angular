@@ -1,0 +1,49 @@
+<header class="container__header">
+  <div class="container__title">
+    <h1 class="mat-h3">Bienvenido al Challenge !</h1>
+  </div>
+  <div class="container__subtitle">
+    <button
+      *ngIf="showSignOut"
+      mat-button
+      color="warn"
+      (click)="signOut()"
+      routerLink=""
+    >
+      Cerrar Sesión
+    </button>
+    <mat-icon>keyboard_arrow_right</mat-icon>
+    <h1 class="mat-h3">{{ title }}</h1>
+    <mat-icon>keyboard_arrow_right</mat-icon>
+    <button *ngIf="showBack" mat-button color="warn" routerLink="/tasks">
+      Volver
+    </button>
+    <button
+      *ngIf="showButton"
+      mat-button
+      color="primary"
+      routerLink="/new-task"
+    >
+      Nueva tarea
+    </button>
+    <button
+      *ngIf="showButton"
+      mat-icon-button
+      color="accent"
+      (click)="downloadTasks()"
+    >
+      <mat-icon>download</mat-icon>
+    </button>
+  </div>
+
+  <div>
+    <mat-form-field *ngIf="showButton">
+      <input
+        matInput
+        placeholder="Buscar por título o descripción"
+        [(ngModel)]="filterTask"
+        (ngModelChange)="onSearchTasks()"
+      />
+    </mat-form-field>
+  </div>
+</header>
