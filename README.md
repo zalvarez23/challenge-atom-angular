@@ -24,6 +24,7 @@ La aplicación está diseñada para facilitar la organización de tareas diarias
 - Angular 17
 - Angular Material
 - TypeScript 5.4
+- Firebase Authentication (custom token → ID token)
 - Signals y Reactividad
 - Deferrable Views (@defer)
 
@@ -54,6 +55,17 @@ La aplicación está diseñada para facilitar la organización de tareas diarias
 
 1. Ejecuta el proyecto: `npm start` o `ng serve`
 2. Abre el navegador en `http://localhost:4200`
+
+**Probar contra API en producción:** `ng serve -c production` (usa `environment.prod.ts` con la API desplegada)
+
+## Despliegue en Firebase Hosting
+
+1. Compila: `ng build`
+2. Despliega: `firebase deploy --only hosting`
+
+La app quedará en `https://challenge-angular-2fbb2.web.app`
+
+**Entornos:** `environment.ts` (desarrollo) y `environment.prod.ts` (producción) definen `apiUrl` y la config de Firebase.
 
 ## Tests
 

@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
 import { FindUserUseCase } from 'src/domain/usecases/find-user.usecase';
 import { SaveUserUseCase } from 'src/domain/usecases/save-user.usecase';
@@ -76,18 +77,19 @@ describe('LoginComponent', () => {
     expect(findUserSpy).toHaveBeenCalledWith('test@test.com');
   });
 
-  it('should navigate to tasks when user exists', () => {
+  it('should navigate to tasks when user exists', fakeAsync(() => {
     findUserSpy.and.returnValue(
       of({ id: 'user-1', customToken: 'custom-token-123' })
     );
     component.emailForm.setValue({ email: 'test@test.com' });
     component.onSubmit();
+    tick();
     expect(authServiceSpy.setCustomToken).toHaveBeenCalledWith(
       'custom-token-123',
       'user-1'
     );
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/tasks']);
-  });
+  }));
 
   it('should create user when findUser returns 404', () => {
     findUserSpy.and.returnValue(throwError(() => ({ status: 404 })));
