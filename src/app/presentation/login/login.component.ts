@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { DialogAlertComponent } from 'src/app/components/dialog-alert/dialog-alert.component';
 import { FindUserUseCase } from 'src/domain/usecases/find-user.usecase';
 import { SaveUserUseCase } from 'src/domain/usecases/save-user.usecase';
+import { AuthService } from 'src/app/services/auth.service';
+import { UserAuthResponse } from 'src/domain/repositories/user.repository';
 
 @Component({
   selector: 'app-login-component',
@@ -16,6 +18,7 @@ export class LoginComponent {
   private saveUser = inject(SaveUserUseCase);
   private dialog = inject(MatDialog);
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   emailForm: FormGroup;
   loading = signal(false);
@@ -26,13 +29,13 @@ export class LoginComponent {
     });
   }
 
-  openDialog(userId: string): void {
+  openDialog(user: UserAuthResponse): void {
     const dialogRef = this.dialog.open(DialogAlertComponent, {
       width: '300px',
     });
 
-    dialogRef.componentInstance.accepted.subscribe(() => {
-      localStorage.setItem('userId', userId);
+    dialogRef.componentInstance.accepted.subscribe(async () => {
+      await this.authService.setCustomToken(user.customToken, user.id);
       this.router.navigate(['/tasks']);
     });
   }
@@ -44,23 +47,33 @@ export class LoginComponent {
     const email = this.emailForm.value.email;
 
     this.findUser.execute(email).subscribe({
-      next: (user) => {
-        if (user?.id) {
-          this.handleExistingUser(user.id);
+      next: async (user) => {
+        if (user?.id && user?.customToken) {
+          await this.handleExistingUser(user);
         }
       },
       error: (err) => this.handleUserNotFound(err, email),
     });
   }
 
-  private handleExistingUser(userId: string): void {
-    localStorage.setItem('userId', userId);
-    this.loading.set(false);
-    this.router.navigate(['/tasks']);
+  private async handleExistingUser(user: UserAuthResponse): Promise<void> {
+    try {
+      await this.authService.setCustomToken(user.customToken, user.id);
+      this.router.navigate(['/tasks']);
+    } catch (err) {
+      console.error('Error al iniciar sesión', err);
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   private handleUserNotFound(err: unknown, email: string): void {
-    if (err && typeof err === 'object' && 'status' in err && (err as { status: number }).status === 404) {
+    if (
+      err &&
+      typeof err === 'object' &&
+      'status' in err &&
+      (err as { status: number }).status === 404
+    ) {
       this.createUser(email);
     } else {
       this.loading.set(false);
@@ -71,9 +84,9 @@ export class LoginComponent {
   private createUser(email: string): void {
     this.saveUser.execute(email).subscribe({
       next: (user) => {
-        if (user?.id) {
+        if (user?.id && user?.customToken) {
           this.loading.set(false);
-          this.openDialog(user.id);
+          this.openDialog(user);
         }
       },
       error: (error) => {

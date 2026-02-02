@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environment';
-import { UserRepository } from 'src/domain/repositories/user.repository';
+import {
+  UserRepository,
+  UserAuthResponse,
+} from 'src/domain/repositories/user.repository';
 
 @Injectable({
   providedIn: 'root',
@@ -12,14 +15,14 @@ export class UserImplementationRepository extends UserRepository {
     super();
   }
 
-  findUser(email: string): Observable<{ id: string } | null> {
-    return this.http.get<{ id: string } | null>(
-      `${environment.apiUrl}/users/${email}`
+  findUser(email: string): Observable<UserAuthResponse | null> {
+    return this.http.get<UserAuthResponse | null>(
+      `${environment.apiUrl}/users/${encodeURIComponent(email)}`
     );
   }
 
-  saveUser(email: string): Observable<{ id: string } | null> {
-    return this.http.post<{ id: string } | null>(
+  saveUser(email: string): Observable<UserAuthResponse | null> {
+    return this.http.post<UserAuthResponse | null>(
       `${environment.apiUrl}/users`,
       { email }
     );

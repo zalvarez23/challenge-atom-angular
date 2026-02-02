@@ -12,6 +12,7 @@ import { FindUserUseCase } from 'src/domain/usecases/find-user.usecase';
 import { UserImplementationRepository } from './repositories/user/user-implementation.repository';
 import { SaveUserUseCase } from 'src/domain/usecases/save-user.usecase';
 import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
+import { AuthService } from 'src/app/services/auth.service';
 
 const getTasksUseCaseFactory = (taskRepo: TasksRepository) =>
   new GetTasksUseCase(taskRepo);
@@ -67,9 +68,12 @@ export const saveUserUseCaseProvider = {
   deps: [UserRepository],
 };
 
+export const authInitializer = (auth: AuthService) => () => auth.initialize();
+
 @NgModule({
   providers: [
     HttpClientModule,
+    AuthService,
     getTasksUseCaseProvider,
     saveTasksUseCaseProvider,
     deleteTasksUseCaseProvider,
@@ -83,6 +87,12 @@ export const saveUserUseCaseProvider = {
     {
       provide: UserRepository,
       useClass: UserImplementationRepository,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: authInitializer,
+      deps: [AuthService],
+      multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,

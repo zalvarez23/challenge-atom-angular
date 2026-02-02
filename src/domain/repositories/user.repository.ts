@@ -1,7 +1,11 @@
 import { Observable } from 'rxjs';
-import { TasksModel } from '../models/task.model';
+
+export interface UserAuthResponse {
+  id: string;
+  customToken: string;
+}
 
 export abstract class UserRepository {
-  abstract findUser(email: string): Observable<{ id: string } | null>;
-  abstract saveUser(email: string): Observable<{ id: string } | null>;
+  abstract findUser(email: string): Observable<UserAuthResponse | null>;
+  abstract saveUser(email: string): Observable<UserAuthResponse | null>;
 }

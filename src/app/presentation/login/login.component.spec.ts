@@ -8,6 +8,7 @@ import { of, throwError } from 'rxjs';
 import { LoginComponent } from './login.component';
 import { FindUserUseCase } from 'src/domain/usecases/find-user.usecase';
 import { SaveUserUseCase } from 'src/domain/usecases/save-user.usecase';
+import { AuthService } from 'src/app/services/auth.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -16,12 +17,18 @@ describe('LoginComponent', () => {
   let saveUserSpy: jasmine.Spy;
   let routerSpy: jasmine.SpyObj<Router>;
   let dialogSpy: jasmine.SpyObj<MatDialog>;
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
 
   beforeEach(async () => {
     const mockFindUser = jasmine.createSpyObj('FindUserUseCase', ['execute']);
     const mockSaveUser = jasmine.createSpyObj('SaveUserUseCase', ['execute']);
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
+    authServiceSpy = jasmine.createSpyObj('AuthService', [
+      'setCustomToken',
+      'clearAuth',
+    ]);
+    authServiceSpy.setCustomToken.and.returnValue(Promise.resolve());
 
     mockFindUser.execute.and.returnValue(of(null));
     mockSaveUser.execute.and.returnValue(of(null));
@@ -39,6 +46,7 @@ describe('LoginComponent', () => {
         { provide: SaveUserUseCase, useValue: mockSaveUser },
         { provide: Router, useValue: routerSpy },
         { provide: MatDialog, useValue: dialogSpy },
+        { provide: AuthService, useValue: authServiceSpy },
       ],
     }).compileComponents();
 
@@ -69,18 +77,22 @@ describe('LoginComponent', () => {
   });
 
   it('should navigate to tasks when user exists', () => {
-    findUserSpy.and.returnValue(of({ id: 'user-1', email: 'test@test.com' }));
+    findUserSpy.and.returnValue(
+      of({ id: 'user-1', customToken: 'custom-token-123' })
+    );
     component.emailForm.setValue({ email: 'test@test.com' });
     component.onSubmit();
+    expect(authServiceSpy.setCustomToken).toHaveBeenCalledWith(
+      'custom-token-123',
+      'user-1'
+    );
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/tasks']);
   });
 
   it('should create user when findUser returns 404', () => {
-    findUserSpy.and.returnValue(
-      throwError(() => ({ status: 404 }))
-    );
+    findUserSpy.and.returnValue(throwError(() => ({ status: 404 })));
     saveUserSpy.and.returnValue(
-      of({ id: 'new-user-1', email: 'new@test.com' })
+      of({ id: 'new-user-1', customToken: 'custom-token-456' })
     );
     component.emailForm.setValue({ email: 'new@test.com' });
     component.onSubmit();

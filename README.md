@@ -42,6 +42,14 @@ La aplicación está diseñada para facilitar la organización de tareas diarias
 
 1. Instala las dependencias: `npm install`
 
+2. **Configura Firebase** (requerido para autenticación con el backend):
+   - Ve a [Firebase Console](https://console.firebase.google.com) → tu proyecto → Project Settings → Your apps
+   - Si no tienes una app web, crea una. Copia la configuración.
+   - Edita `src/environment.ts` y reemplaza los valores en `firebase` con tu configuración real:
+     - `apiKey`, `authDomain`, `projectId`, `storageBucket`, `messagingSenderId`, `appId`
+
+3. **Backend**: Asegúrate de que el backend (`challenge-atom-ms`) esté corriendo en `http://localhost:3000`
+
 ## Uso
 
 1. Ejecuta el proyecto: `npm start` o `ng serve`

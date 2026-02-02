@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -7,6 +9,8 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
   @Input() title: string;
   @Input() showButton: boolean;
   @Input() showBack: boolean;
@@ -37,6 +41,7 @@ export class HeaderComponent {
   }
 
   signOut() {
-    localStorage.clear();
+    this.authService.clearAuth();
+    this.router.navigate(['/']);
   }
 }
